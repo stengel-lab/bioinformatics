@@ -7,3 +7,5 @@ Document the scheduler, CPU and memory requests, wall time, array indexing, job 
 Keep site configuration outside reusable teaching commands. Record reference data and external container image versions or digests. A path to an environment or image does not prove that it exists or has the required contents.
 
 This milestone does not submit jobs or validate any site's analysis environment.
+
+The [CUT&RUN source reconstruction](../assays/cut-and-run/sources.md#computational-requests-in-the-sources) records observed resource requests and scheduler assumptions. Read its restart/dependency cautions before adapting any private worker. The public lesson contains manual commands, not a cluster submission pipeline.

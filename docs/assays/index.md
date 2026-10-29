@@ -1,11 +1,11 @@
 # Assay tutorial roadmap
 
-These pages are writing outlines, not runnable workflows. The first complete tutorial should use an approved public or synthetic dataset with a clear biological question and bounded resource needs.
+The CUT&RUN page is a detailed educational draft reconstructed from inspected lab sources. Other pages remain writing outlines. No assay has an execution-validated teaching dataset in this milestone; a public or synthetic dataset and bounded resource measurements are required next.
 
 | Assay | Proposed teaching emphasis | Status |
 |---|---|---|
 | [ATAC-seq](atac-seq/index.md) | Accessibility, alignment, peak sets, and replicates | Outline |
-| [CUT&RUN](cut-and-run/index.md) | Target enrichment, controls, and normalization | Outline |
+| [CUT&RUN](cut-and-run/index.md) | Reads, target enrichment, controls, calibration, replicate QC and differential binding | Full educational draft; execution/scientific review pending |
 | [ChIP-seq](chip-seq/index.md) | Enrichment, background, and peak interpretation | Outline |
 | [PRO-seq](pro-seq/index.md) | Nascent transcription, strand, and normalization | Outline |
 | [RNA-seq](rna-seq/index.md) | Splicing, strand, counts, and differential expression | Outline |

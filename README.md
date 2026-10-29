@@ -2,7 +2,7 @@
 
 An educational bioinformatics resource for the Stengel Lab at Albert Einstein College of Medicine.
 
-The current milestone establishes documentation, a software reference, and installation guidance. Assay tutorials are outlines awaiting scientific review. Production pipelines are a future milestone.
+The current milestone adds a detailed [CUT&RUN educational tutorial draft](docs/assays/cut-and-run/index.md), linked software references, installation candidates, and a scientific decision log. Its commands reconstruct observed lab methods; analysis execution and scientific acceptance are pending. Production pipelines are a future milestone.
 
 Start with [getting started](docs/getting-started/index.md), the [software reference](docs/software/index.md), and the [tutorial roadmap](docs/assays/index.md). See [CONTRIBUTING.md](CONTRIBUTING.md) for review expectations.
 
@@ -14,7 +14,7 @@ Start with [getting started](docs/getting-started/index.md), the [software refer
 | `docs/software/` | Software reference and catalog conventions |
 | `docs/installation/` | Windows, macOS, Linux, and HPC guidance |
 | `docs/concepts/` | Scientific and computational foundations |
-| `docs/assays/` | Assay-specific tutorial outlines |
+| `docs/assays/` | CUT&RUN walkthrough and other assay outlines |
 | `docs/troubleshooting/` | Diagnostic guidance |
 | `docs/contributing/` | Templates, provenance, and publication review |
 | `mkdocs.yml` | Optional searchable documentation preview |

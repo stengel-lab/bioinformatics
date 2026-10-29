@@ -6,4 +6,4 @@ Keep analysis dependencies isolated. Document which packages come from a system 
 
 Before publishing a tutorial, measure memory, CPU, disk, and temporary-storage needs on a permitted example dataset. Local execution requires an explicit replacement for any scheduler submission or site-specific module command.
 
-Per-assay Linux analysis environments remain to be reviewed.
+The [CUT&RUN setup guide](../assays/cut-and-run/installation.md) provides candidate environments and reference preparation. They have not been solved or execution-validated on Linux in this milestone.

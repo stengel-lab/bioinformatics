@@ -14,12 +14,32 @@ markdown_extensions:
   - admonition
   - tables
   - fenced_code
+validation:
+  links:
+    anchors: warn
 nav:
   - Home: index.md
   - Getting started:
       - Learning path: getting-started/index.md
       - Preview documentation: getting-started/preview.md
-  - Software reference: software/index.md
+  - Software reference:
+      - Catalog: software/index.md
+      - FastQC: software/fastqc.md
+      - Cutadapt: software/cutadapt.md
+      - Bowtie2: software/bowtie2.md
+      - SAMtools: software/samtools.md
+      - BEDTools: software/bedtools.md
+      - MACS2: software/macs2.md
+      - deepTools: software/deeptools.md
+      - WiggleTools: software/wiggletools.md
+      - UCSC utilities: software/ucsc-track-tools.md
+      - DiffBind: software/diffbind.md
+      - DESeq2: software/deseq2.md
+      - HOMER: software/homer.md
+      - IGV: software/igv.md
+      - R libraries: software/r-plotting.md
+      - Python figures: software/python-figures.md
+      - Execution environments: software/execution-environments.md
   - Installation:
       - Overview: installation/index.md
       - Windows: installation/windows.md
@@ -33,7 +53,19 @@ nav:
   - Assay tutorials:
       - Roadmap: assays/index.md
       - ATAC-seq: assays/atac-seq/index.md
-      - CUT&RUN: assays/cut-and-run/index.md
+      - CUT&RUN:
+          - Overview: assays/cut-and-run/index.md
+          - 1. Design and reads: assays/cut-and-run/01-design-and-reads.md
+          - 2. Alignment and peaks: assays/cut-and-run/02-alignment-and-peaks.md
+          - 3. Normalization and QC: assays/cut-and-run/03-normalization-and-qc.md
+          - 4. Differential binding: assays/cut-and-run/04-differential-and-interpretation.md
+          - Installation and references: assays/cut-and-run/installation.md
+          - Source reconstruction: assays/cut-and-run/sources.md
+          - Methods comparison: assays/cut-and-run/methods-comparison.md
+          - Decisions and uncertainties: assays/cut-and-run/decisions.md
+          - Validation record: assays/cut-and-run/validation.md
+          - Next steps: assays/cut-and-run/next-steps.md
+          - References: assays/cut-and-run/references.md
       - ChIP-seq: assays/chip-seq/index.md
       - PRO-seq: assays/pro-seq/index.md
       - RNA-seq: assays/rna-seq/index.md
