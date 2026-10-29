@@ -1,0 +1,48 @@
+site_name: Stengel Lab Bioinformatics
+site_description: Educational bioinformatics tutorials and software reference
+repo_url: https://github.com/stengel-lab/bioinformatics
+repo_name: stengel-lab/bioinformatics
+edit_uri: ''
+docs_dir: docs
+site_dir: site
+theme:
+  name: material
+  font: false
+plugins:
+  - search
+markdown_extensions:
+  - admonition
+  - tables
+  - fenced_code
+nav:
+  - Home: index.md
+  - Getting started:
+      - Learning path: getting-started/index.md
+      - Preview documentation: getting-started/preview.md
+  - Software reference: software/index.md
+  - Installation:
+      - Overview: installation/index.md
+      - Windows: installation/windows.md
+      - macOS: installation/macos.md
+      - Linux: installation/linux.md
+      - HPC: installation/hpc.md
+  - Concepts:
+      - Overview: concepts/index.md
+      - File formats and coordinates: concepts/file-formats.md
+      - Reproducibility and evidence: concepts/reproducibility.md
+  - Assay tutorials:
+      - Roadmap: assays/index.md
+      - ATAC-seq: assays/atac-seq/index.md
+      - CUT&RUN: assays/cut-and-run/index.md
+      - ChIP-seq: assays/chip-seq/index.md
+      - PRO-seq: assays/pro-seq/index.md
+      - RNA-seq: assays/rna-seq/index.md
+      - Micro-C: assays/micro-c/index.md
+  - Troubleshooting: troubleshooting/index.md
+  - Contributing:
+      - Overview: contributing/index.md
+      - Provenance: contributing/provenance.md
+      - Publication review: contributing/publication.md
+      - Tool template: contributing/templates/tool.md
+      - Tutorial template: contributing/templates/tutorial.md
+      - Review record template: contributing/templates/review-record.md
