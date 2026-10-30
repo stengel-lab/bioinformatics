@@ -1,11 +1,21 @@
 # Getting started
 
-Start with the biological question: what does the assay measure, which comparisons are meaningful, and what evidence would support the proposed conclusion?
+## Look up a tool
 
-1. Read the [CUT&RUN tutorial draft](../assays/cut-and-run/index.md) or another assay's [outline](../assays/index.md) and identify its prerequisites.
-2. Learn the relevant [file formats and coordinate conventions](../concepts/file-formats.md).
-3. Choose an [installation environment](../installation/index.md) appropriate to the tools and available resources.
-4. For each processing step, use the [software reference](../software/index.md) to identify the program, inputs, outputs, and documented version.
-5. Record quality checks and interpretation limits alongside commands.
+Open the [software library](../software/index.md), choose a program, and follow **Install → Verify installation → Basic syntax → Workflow example**. Use the search box to find a command or parameter directly.
 
-The CUT&RUN draft explains observed commands and unresolved decisions; it is not an execution-validated protocol. Example sequencing datasets have not been released in this milestone. Contributors can use the [tutorial template](../contributing/templates/tutorial.md) to develop further lessons.
+## Follow an analysis
+
+1. Start with the [CUT&RUN walkthrough](../assays/cut-and-run/index.md).
+2. Prepare a Linux, macOS or Windows/WSL2 [environment](../installation/index.md).
+3. Review the required reads, sample design and [reference files](../assays/cut-and-run/installation.md#reference-files-and-indices).
+4. Work through one sample's QC, trimming, alignment, peaks and coverage. Inspect each output before continuing.
+5. Compare biological replicates before differential binding or condition summaries.
+
+The command examples use fictional names and require your own permitted inputs and reviewed references. They are manual teaching examples, not a single script to paste and run. The CUT&RUN lesson remains a draft awaiting end-to-end execution validation.
+
+## Read command examples
+
+`reads/control_A_R1.fastq.gz` is an example path, not a downloadable file. Variables such as `$SAMPLE` must be defined in the same Bash session. Lines ending in `\` continue on the next line. Do not paste Bash commands into PowerShell; on Windows use WSL2 or a remote Linux shell.
+
+If file formats are unfamiliar, read [FASTQ, BAM, BED and coordinates](../concepts/file-formats.md). For errors, start with [troubleshooting](../troubleshooting/index.md). Contributors can [preview the website locally](preview.md).

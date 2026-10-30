@@ -24,4 +24,4 @@ Open the local address printed by MkDocs. To build without serving, replace the 
 
 ## Website framework decision
 
-The scaffold uses [MkDocs configuration](https://www.mkdocs.org/user-guide/configuration/) and the [Material theme](https://squidfunk.github.io/mkdocs-material/getting-started/). Material's installation page announces end of life on May 5, 2027 and identifies Zensical as its successor. Reassess the renderer before public deployment. Markdown source and a small navigation configuration keep that decision reversible. No hosting or deployment automation is enabled.
+The site uses [MkDocs configuration](https://www.mkdocs.org/user-guide/configuration/) and the [Material theme](https://squidfunk.github.io/mkdocs-material/getting-started/). Material announces end of life on May 5, 2027 and identifies Zensical as its successor. v0.1 retains the current renderer; reassess it before support ends. Markdown sources keep that transition manageable. [GitHub Actions publishes the site](../contributing/website.md) after checks pass on `main`.

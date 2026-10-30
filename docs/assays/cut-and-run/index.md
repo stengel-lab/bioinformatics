@@ -1,8 +1,10 @@
-# CUT&RUN: from sequencing reads to interpretable binding changes
+# CUT&RUN tutorial
 
 **Draft status:** reconstructed from laboratory source code and saved logs. Analysis commands have not been executed in this milestone, and scientific validation is pending. Documentation checks are recorded in [validation](validation.md).
 
-**Scientific review, 2026-10-30:** start with the [review summary](scientific-review.md), the expanded [20 decisions](decisions.md), and the [reference-aware spike audit](reference-audit.md). Confirmed documentation errors were corrected; unresolved scientific choices remain labeled and the original lab workers are unchanged.
+**[Start the step-by-step walkthrough →](walkthrough.md)**
+
+New to the tools? Start with [installation and reference preparation](installation.md). The walkthrough puts commands and output checks first; the detailed lessons below explain the algorithms, scientific choices and historical alternatives.
 
 The question is: **where is the antibody target enriched, and how does enrichment change between biological conditions?** CUT&RUN uses antibody-directed nuclease cleavage to release DNA associated with the target. Paired-end sequencing helps locate the released fragments. Signal can reflect both target occupancy and experimental recovery, so controls, fragment properties and normalization affect the interpretation. See the [original method](https://elifesciences.org/articles/21856).
 
@@ -29,7 +31,7 @@ Design + controls + reference identities
 
 Coverage tracks and peak CSV files answer different questions. Differential binding counts come from each replicate's BAM, not from averaged BigWigs. Browser averages illustrate conditions; they are not biological replicates.
 
-## Work through the tutorial
+## Detailed lessons and reference material
 
 | Read in order | What you will learn |
 |---|---|
@@ -38,7 +40,7 @@ Coverage tracks and peak CSV files answer different questions. Differential bind
 | [3. Spike scaling and replicate QC](03-normalization-and-qc.md) | Audit spike counts, distinguish read segments from fragments, compare replicates and make tracks |
 | [4. Differential binding and interpretation](04-differential-and-interpretation.md) | Reconstruct the two DiffBind branches, inspect contrasts, annotate peaks and create figures |
 
-Start with [installation and references](installation.md) if the tools or genome resources are unfamiliar. Keep the [lab/external comparison](methods-comparison.md) and [decision log](decisions.md) beside the tutorial.
+For a specific methodological question, consult the [lab/external comparison](methods-comparison.md), [scientific review summary](scientific-review.md), [reference-aware spike audit](reference-audit.md), or [decision log](decisions.md). These are secondary references; the practical entry point is the [walkthrough](walkthrough.md).
 
 ## How to read the evidence labels
 

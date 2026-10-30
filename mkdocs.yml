@@ -1,5 +1,6 @@
 site_name: Stengel Lab Bioinformatics
 site_description: Educational bioinformatics tutorials and software reference
+site_url: https://stengel-lab.github.io/bioinformatics/
 repo_url: https://github.com/stengel-lab/bioinformatics
 repo_name: stengel-lab/bioinformatics
 edit_uri: ''
@@ -11,12 +12,20 @@ exclude_docs: |
 theme:
   name: material
   font: false
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
 plugins:
   - search
 markdown_extensions:
   - admonition
   - tables
-  - fenced_code
+  - pymdownx.superfences
+  - pymdownx.highlight
 validation:
   links:
     anchors: warn
@@ -25,7 +34,7 @@ nav:
   - Getting started:
       - Learning path: getting-started/index.md
       - Preview documentation: getting-started/preview.md
-  - Software reference:
+  - Software/tools:
       - Catalog: software/index.md
       - FastQC: software/fastqc.md
       - Cutadapt: software/cutadapt.md
@@ -53,16 +62,16 @@ nav:
       - Overview: concepts/index.md
       - File formats and coordinates: concepts/file-formats.md
       - Reproducibility and evidence: concepts/reproducibility.md
-  - Assay tutorials:
-      - Roadmap: assays/index.md
-      - ATAC-seq: assays/atac-seq/index.md
-      - CUT&RUN:
-          - Overview: assays/cut-and-run/index.md
+  - CUT&RUN:
+      - Start here: assays/cut-and-run/index.md
+      - Step-by-step walkthrough: assays/cut-and-run/walkthrough.md
+      - Setup and references: assays/cut-and-run/installation.md
+      - Detailed lessons:
           - 1. Design and reads: assays/cut-and-run/01-design-and-reads.md
           - 2. Alignment and peaks: assays/cut-and-run/02-alignment-and-peaks.md
           - 3. Normalization and QC: assays/cut-and-run/03-normalization-and-qc.md
           - 4. Differential binding: assays/cut-and-run/04-differential-and-interpretation.md
-          - Installation and references: assays/cut-and-run/installation.md
+      - Method notes and review:
           - Source reconstruction: assays/cut-and-run/sources.md
           - Methods comparison: assays/cut-and-run/methods-comparison.md
           - Scientific review summary: assays/cut-and-run/scientific-review.md
@@ -71,15 +80,19 @@ nav:
           - Validation record: assays/cut-and-run/validation.md
           - Next steps: assays/cut-and-run/next-steps.md
           - References: assays/cut-and-run/references.md
-      - ChIP-seq: assays/chip-seq/index.md
-      - PRO-seq: assays/pro-seq/index.md
-      - RNA-seq: assays/rna-seq/index.md
-      - Micro-C: assays/micro-c/index.md
+  - Other assays:
+      - Not yet developed: assays/index.md
+      - ATAC-seq (outline): assays/atac-seq/index.md
+      - ChIP-seq (outline): assays/chip-seq/index.md
+      - PRO-seq (outline): assays/pro-seq/index.md
+      - RNA-seq (outline): assays/rna-seq/index.md
+      - Micro-C (outline): assays/micro-c/index.md
   - Troubleshooting: troubleshooting/index.md
   - Contributing:
       - Overview: contributing/index.md
       - Provenance: contributing/provenance.md
       - Publication review: contributing/publication.md
+      - Website publishing: contributing/website.md
       - Tool template: contributing/templates/tool.md
       - Tutorial template: contributing/templates/tutorial.md
       - Review record template: contributing/templates/review-record.md

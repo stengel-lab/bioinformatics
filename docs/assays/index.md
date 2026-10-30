@@ -1,4 +1,8 @@
-# Assay tutorial roadmap
+# Assay guides
+
+**Available now:** [CUT&RUN step-by-step walkthrough](cut-and-run/walkthrough.md).
+
+**Not yet developed:** ATAC-seq, ChIP-seq, PRO-seq, RNA-seq and Micro-C. Their pages describe planned learning goals, not processing instructions.
 
 The CUT&RUN page is a detailed educational draft reconstructed from inspected lab sources. Other pages remain writing outlines. No assay has an execution-validated teaching dataset in this milestone; a public or synthetic dataset and bounded resource measurements are required next.
 
