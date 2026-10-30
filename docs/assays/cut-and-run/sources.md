@@ -2,6 +2,8 @@
 
 **Evidence reviewed:** 2026-10-29. The local inventory from milestone `4027d17` was revisited against the original files. The exact private map records full paths, SHA256 hashes, line ranges and inspection notes. Public IDs below expose only reviewed method descriptions and generic filenames. Original source scripts and logs are not redistributed.
 
+**Scientific review extension, 2026-10-30:** source hashes were rechecked; reference-build searches and 18 saved-log inspections are recorded privately. The [review](scientific-review.md) distinguishes source-level dependencies from historical exposure. Saved logs demonstrate a MACS2 option pattern and use of spike factors, but supply neither a reference dictionary nor a completed upstream count/coverage trace. The exact upstream [DiffBind 3.16.0 commit](https://github.com/bioc/DiffBind/tree/da0b0442311f6264ac8a14eff80dbf9dcc97f614) was inspected as external API evidence, not substituted for the executed lab environment.
+
 ## Why this is the selected baseline
 
 The current supervisor (**CR-S07**, lines 64–82) and monitor (**CR-S08**, lines 881–988) both select `cutrun_fastq2bam_oai.sbatch`, `cutrun_bam2bw_oai.sbatch`, and `diffbind.sbatch`. The latter selects `diffbind_analysis.R` (**CR-S04**, line 89). That call relationship is stronger evidence of intended use than a directory named “newest.” It establishes a reconstruction baseline, not a declaration that the implementation is authoritative or scientifically accepted.

@@ -2,6 +2,8 @@
 
 **Draft status:** reconstructed from laboratory source code and saved logs. Analysis commands have not been executed in this milestone, and scientific validation is pending. Documentation checks are recorded in [validation](validation.md).
 
+**Scientific review, 2026-10-30:** start with the [review summary](scientific-review.md), the expanded [20 decisions](decisions.md), and the [reference-aware spike audit](reference-audit.md). Confirmed documentation errors were corrected; unresolved scientific choices remain labeled and the original lab workers are unchanged.
+
 The question is: **where is the antibody target enriched, and how does enrichment change between biological conditions?** CUT&RUN uses antibody-directed nuclease cleavage to release DNA associated with the target. Paired-end sequencing helps locate the released fragments. Signal can reflect both target occupancy and experimental recovery, so controls, fragment properties and normalization affect the interpretation. See the [original method](https://elifesciences.org/articles/21856).
 
 This walkthrough reconstructs the selected lab workers, including their limitations. It follows reads through QC, trimming, combined-reference alignment, human selection, peak calling, coverage, replicate review, differential binding, motifs and figures. It also explains where historical branches differ.
@@ -15,10 +17,12 @@ Design + controls + reference identities
   → paired FASTQ → raw QC → trim → trimmed QC
   → align to human + yeast → MAPQ filter → sort/index
   → human BAM → narrow or target-reviewed broad peaks → blacklist review
-      ├─ combined BAM + approved spike contigs → spike counts
-      │     → CPM / spike-scaled tracks → replicate QC → optional means
+      ├─ human BAM → CPM tracks → replicate QC → optional means
+      ├─ combined BAM + approved spike reference/protocol → spike counts
+      │     → spike-scaled tracks → replicate QC → optional means
       └─ per-replicate BAM + peaks + design → DiffBind counts
-            → standard and reviewed spike branches → contrast reports
+            → standard model; approved spike counts → spike model
+            → contrast reports
             → coordinate-safe BED sets → motifs / annotations / MA plots
   → matched-scale browser tracks + fixed-region heatmaps → interpretation
 ```

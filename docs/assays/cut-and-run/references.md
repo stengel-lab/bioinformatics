@@ -1,6 +1,14 @@
 # References and review boundaries
 
-**Accessed/reviewed: 2026-10-29.** This list distinguishes primary methods, a versioned external pipeline, and official software resources. No figure, full source script, private log or result table is redistributed. Links to current manuals describe external interfaces; they do not establish historical installed versions.
+**Accessed/reviewed: 2026-10-29; scientific review extended 2026-10-30.** This list distinguishes primary methods, a versioned external pipeline, and official software resources. No figure, full source script, private log or result table is redistributed. Links to current manuals describe external interfaces; they do not establish historical installed versions.
+
+## Sources added in scientific review
+
+- [DiffBind 3.16.0 immutable source snapshot](https://github.com/bioc/DiffBind/tree/da0b0442311f6264ac8a14eff80dbf9dcc97f614): DESCRIPTION, API, counting, range conversion, normalization and DESeq2 adapter inspected without executing them. Supports the refined duplicate-policy, defaults, contrast, coordinate and factor-interface explanations. The original package source is not vendored into this repository.
+- [The CUT&RUN suspect list of problematic regions of the genome](https://link.springer.com/article/10.1186/s13059-023-03027-3) (Genome Biology, 2023; DOI 10.1186/s13059-023-03027-3): assay-specific artifact-region evidence; a potential comparison to, not an automatic replacement for, the lab mask.
+- [Bcor loss perturbs myeloid differentiation and promotes leukaemogenesis](https://www.nature.com/articles/s41467-019-09250-6) (Nature Communications, 2019; DOI 10.1038/s41467-019-09250-6): primary BCOR/Polycomb context distinguishing occupancy and histone-mark questions. Retrieved primary search text supported this context; direct publisher access later encountered an access redirect. It does not validate a specific CUT&RUN caller.
+- [DESeq2 vignette](https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html), [R prcomp](https://stat.ethz.ch/R-manual/R-devel/library/stats/html/prcomp.html) and [UCSC BED specification](https://genome.ucsc.edu/FAQ/FAQformat.html#format1): model/design, PCA scaling and coordinate contracts.
+- [Bash manual](https://www.gnu.org/software/bash/manual/bash.html#The-Set-Builtin), [Slurm sbatch](https://slurm.schedmd.com/sbatch.html#OPT_dependency), [Conda environment management](https://docs.conda.io/projects/conda/en/stable/user-guide/tasks/manage-environments.html) and [FAIR principles](https://pmc.ncbi.nlm.nih.gov/articles/PMC4792175/): runtime/provenance references. GNU manual retrieval timed out; shell claims were independently checked using synthetic local Bash examples. No original source worker was executed.
 
 ## Primary methods
 

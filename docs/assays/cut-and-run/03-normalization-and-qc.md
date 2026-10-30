@@ -4,6 +4,8 @@ Previous: [alignment and peaks](02-alignment-and-peaks.md) · Next: [differentia
 
 **Review gate:** do not treat the historical spike-normalized outputs as quantitatively validated. The selected species-count expression and the identity of the calibration material require resolution first. This chapter reconstructs behavior and separates proposed corrections.
 
+The [reference-aware audit](reference-audit.md) traces the exact consumers and historical evidence limits, and supplies a tested text-table counting example. The reference build/dictionary was not recovered. The regex defect is demonstrable; contamination of a particular historical table has not been established.
+
 ## Stage 8 — Audit spike counts before scaling
 
 ### Scientific purpose and assumptions
@@ -36,6 +38,8 @@ awk 'NR==FNR {spike[$1]=1; next} ($1 in spike) {s+=$3} END {print s+0}' \
 
 **Outputs/QC:** per-sample count, contig-level table, manifest hash, counting rule and reference hash. Review zero/very low spike counts, host/spike ambiguity, extreme scale factors, and variation among replicates. A finite positive count alone does not establish suitable calibration. Recompute all counts consistently if the rule changes; do not mix old regex counts with new exact-contig counts.
 
+The short awk example above only illustrates exact membership. It does **not** reject an empty/incomplete spike list, unexpected reference contigs or mismatched lengths. For an auditable proposed replacement, use the complete-role/length checks in the [Python teaching example](reference-audit.md#proposed-exact-role-counting-example). Species roles still require trusted reference provenance.
+
 **Troubleshooting:** names alone cannot recover species identity from a reference with colliding contigs. Rebuild a uniquely named index or select another reviewed mapping strategy. **Output → next:** an approved, complete cohort count table; otherwise keep spike-based interpretation pending.
 
 ## Stage 9 — Make coverage tracks with an explicit denominator
@@ -53,6 +57,8 @@ d_i = S_i / M                 (intended count-model size factor)
 ```
 
 The multiplier and size factor are reciprocals for a reason: a track is multiplied, while a count-model normalization denominator divides counts. For synthetic `S = 50, 100, 200`, `M = 100`, the coverage factors are `2, 1, 0.5` and the denominators are `0.5, 1, 2`. This algebra does not prove that DiffBind applied the factors as intended.
+
+**What scaling accomplishes:** multiplying every bin by one sample's factor changes its amplitude, not its genomic shape or specificity. It cannot fix contamination, failed enrichment or a mismatched reference. A common positive median sets common units: `k_i/k_j = S_j/S_i`. Changing that median alone does not change relative within-cohort scaling; sample-dependent miscounts or mixing reused/new artifacts can. The [downstream trace](reference-audit.md#exactly-where-the-count-propagates) distinguishes fresh track counts from the cached table consumed by DiffBind.
 
 **Inputs/tools:** combined and human BAMs/indexes; reviewed cohort and scale factor; [deepTools](../../software/deeptools.md). Source version is not established. The following is a **review-gated reconstruction**, using `SCALE_FACTOR=2` only as a fictional numerical illustration. Replace it with the reviewed cohort calculation; never leave the toy value for a real sample.
 
@@ -91,6 +97,8 @@ The source does not add duplicate, MAPQ, blacklist or mitochondrial filters at t
 
 **Inputs/tools:** individual, consistently normalized BigWigs; deepTools. **Historical reconstruction, CR-S15:** 10 kb genomic bins followed by PCA and Spearman correlation.
 
+**How the summaries work:** binning converts continuous tracks into a matrix of sample-by-region signal. PCA finds combinations that explain matrix variation; Spearman correlation compares ranked values. The chosen bins, missing-data policy, large artifact regions and normalization determine what “similar” means. A high correlation may reflect shared background rather than concordant target peaks. Compare the same region universe and retain unaveraged biological replicates.
+
 ```bash
 multiBigwigSummary bins \
   -b tracks/cpm/control_A.CPM.bw tracks/cpm/control_B.CPM.bw \
@@ -109,6 +117,8 @@ The source requests 16 processors here; four is an explicit teaching resource ad
 ### Peak reproducibility is a separate question
 
 **U:** the selected chain does not establish a validated biological-replicate consensus/IDR procedure. Downstream “shared” peaksets in **CR-S09** intersect significant **contrasts/timepoints**, not independently called replicate peaks. They cannot substitute for replicate reproducibility.
+
+There is nevertheless an **implicit DiffBind count-universe rule**: in verified version 3.16.0, unmodified `minOverlap=2` requires support in two input peaksets across the imported object. It does not necessarily require two biological replicates within one condition. Inspect which peaksets contribute; “no reviewed per-condition reproducibility stage” does not mean “no overlap default exists.”
 
 **P:** predefine a target-appropriate rule using replicate overlap, signal support and controls. A union retains any replicate's regions; an intersection can miss genuine weak peaks and narrow shifted summits; a reproducibility model such as IDR needs its own suitability review. nf-core's `replicate_threshold=1` default is not a requirement for agreement by two replicates. Record overlap geometry and the number of required replicates explicitly.
 

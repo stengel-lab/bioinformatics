@@ -1,8 +1,40 @@
 # Validation record
 
-**Review date: 2026-10-29.** This milestone reconstructs source behavior and builds educational documentation. It does not establish an accepted analysis protocol.
+**Scientific review: 2026-10-30; prior milestone checked 2026-10-29.** These checks do not establish an accepted analysis protocol.
 
-## Documentation and source checks
+## Scientific review checks — 2026-10-30
+
+The current strict build and local link/syntax checks are rerun after all edits. The reviewed text-table counting example has **7 passing synthetic unittest methods**, covering host/spike identity, malformed/incomplete dictionaries, zero counts, CLI behavior, byte hashes and input preservation. No original processing script is imported or executed by those tests.
+
+Additional synthetic checks execute the **public proposed CSV→BED example** with both GRanges-style and explicit data-frame column names, including the one-base interval `1–1` → BED `0–1`. Literal arithmetic checks verify reciprocal factors, unchanged relative ratios under common median scaling, and a rounding example near the selection threshold. No DiffBind/DESeq2 model is fitted.
+
+Minimal Bash examples demonstrate the post-increment exit status, lack of guaranteed child error options, masked producer failure and masked `local` assignment. Corrected minimal examples propagate failure as intended. This tests shell semantics, not original cluster jobs. R fixture tests use an isolated C locale; parser R 4.3.1 is not the historical analysis environment.
+
+Source checks compare the 344-file inventory and 28 selected source/log hashes against the prior snapshot, plus all 18 additionally inspected saved logs against this review's read-only records. The private diagnostics retain exact paths, commands, reference searches, external-source hashes and full results. Public text and code are screened for sensitive paths/credentials before commit.
+
+To reproduce the public build and counter tests from the repository root, activate the [documentation preview environment](../../getting-started/preview.md), then run:
+
+```bash
+python -m mkdocs build --strict
+python -m unittest discover -s tests -p 'test_cutrun_reference_counting.py' -v
+```
+
+The [reference audit](reference-audit.md) states exactly what the counting example validates and what reference/calibration evidence remains absent. The [review summary](scientific-review.md) separates immediate documentation corrections from proposed source changes.
+
+| Current check | Result / boundary |
+|---|---|
+| Strict MkDocs build | Passed; missing section anchors fail strict builds |
+| Internal targets/assets/fragments | 4,056 generated references checked; no missing targets or anchors |
+| Syntax | 51 fenced blocks parsed: 40 Bash, 9 R, 1 Python, 1 PowerShell; helper/test code also passes interpreter checks |
+| Counter tests | 7 passing synthetic unittest methods; no BAM/reference access |
+| Export/math fixtures | Both CSV schemas export expected BED boundaries; literal rounding and scale-ratio checks pass |
+| Shell fixtures | Failure masking and safe alternatives reproduced with minimal synthetic commands |
+| Decisions | Exactly D01–D20, each with all 7 required review fields |
+| Diagram | Updated Mermaid/SVG separates CPM from calibration and connects approved counts to the spike model; rendered preview visually reviewed |
+| Source integrity | 344 inventory files, 28 selected source/log records and 18 additional saved-log records unchanged under the stated checks; counts overlap |
+| Publication assets | Public code/text and generated HTML/search/download assets screened; Python bytecode/cache artifacts excluded from the website |
+
+## Prior milestone record — 2026-10-29
 
 | Check | Result and scope |
 |---|---|
@@ -23,8 +55,8 @@ The private review record retains exact commands, source hashes and full diagnos
 - No original lab worker, supervisor, analysis script or scheduler job was executed.
 - No FASTQ/BAM/peak processing, normalization, count model, motif enrichment or biological figure was run on lab data.
 - Candidate Linux/macOS/WSL2 environments were not installed or solver-verified; software/version availability remains to be checked.
-- No reference download, index construction or historical-reference equivalence check was performed.
-- No statistical contrast sign, factor application, reference coordinate export or biological QC threshold was execution-validated.
+- No genome-reference download, index construction or historical-reference equivalence check was performed.
+- No fitted contrast/model, historical factor application, historical coordinate export or biological QC threshold was execution-validated. Only the stated synthetic export/arithmetic checks were executed.
 - HOMER's upstream manual was unavailable during review; source invocations were inspected, not runtime-verified.
 
 Saved version headers establish that certain historical software was reported in a log, not that all processing stages succeeded. A website build, link check or syntax parse cannot resolve the [scientific decisions](decisions.md).

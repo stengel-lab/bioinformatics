@@ -1,6 +1,6 @@
 # Lab methods compared with established approaches
 
-**Review date: 2026-10-29.** External comparator: stable **nf-core/cutandrun 3.2.2**, not its development branch. Consult the [release](https://github.com/nf-core/cutandrun/releases/tag/3.2.2), [usage](https://nf-co.re/cutandrun/3.2.2/docs/usage), [parameters](https://nf-co.re/cutandrun/3.2.2/parameters) and versioned implementation links below. No nf-core analysis was run. Defaults are comparison points, not universal scientific requirements.
+**Scientific review updated: 2026-10-30.** External comparator: stable **nf-core/cutandrun 3.2.2**, not its development branch. Consult the [release](https://github.com/nf-core/cutandrun/releases/tag/3.2.2), [usage](https://nf-co.re/cutandrun/3.2.2/docs/usage), [parameters](https://nf-co.re/cutandrun/3.2.2/parameters) and versioned implementation links below. No nf-core analysis was run. Defaults are comparison points, not universal scientific requirements.
 
 **L** = observed lab code; **E** = external documented method; **P** = proposed change; **U** = unresolved. Lab evidence resolves through the [source registry](sources.md); all proposals require review rather than silently replacing the reconstruction.
 
@@ -22,7 +22,7 @@ Bowtie2 paired-end terminology is defined by its [official manual](https://bowti
 
 | Topic | L — selected lab practice | E — comparator | P / U — decision to review |
 |---|---|---|---|
-| Duplicates | BAMs/tracks retain duplicates; MACS2 `auto`; DiffBind count removal `TRUE` | nf-core [usage](https://nf-co.re/cutandrun/3.2.2/docs/usage) defaults to deduplicating controls, with optional target deduplication | U: distinguish technical amplification from genuine repeated cleavage; assess complexity and target-specific concentration. P: document policy at every product |
+| Duplicates | BAMs/tracks retain records; MACS2 `auto`; DiffBind requests removal but its final summarizeOverlaps pass filters duplicate flags, with no upstream marking step established | nf-core [usage](https://nf-co.re/cutandrun/3.2.2/docs/usage) defaults to deduplicating controls, with optional target deduplication | U: distinguish technical amplification from genuine repeated cleavage; inspect flags and complexity. P: document final count policy and preliminary summit pass separately |
 | Calibration biology | Combined reference suggests yeast use; full spike protocol absent | [Meers et al.](https://elifesciences.org/articles/46314) discuss bacterial carryover calibration in a defined protocol | U: deliberate yeast versus carryover, amount/addition stage and equal-cell assumptions; one protocol does not validate another |
 | Spike identity/counts | Prefix regex may include human chrX/chrM; idxstats sums mapped segments | nf-core supports a distinct spike reference | P: exact contig manifest or separately validated mapping; reconcile segments versus fragments before using scale factors |
 | Coverage denominator | `median(S)/S_i`; CPM also produced | nf-core schema exposes normalization modes and spike constant 10,000 | U: cohort/cache consistency and whether a common multiplicative scale is the only difference; compare counts and filters first |

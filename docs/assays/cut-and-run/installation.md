@@ -34,6 +34,8 @@ Confirm the distribution reports version 2. Launch Ubuntu and run the Bash/Conda
 
 Documentation examples below do not silently substitute MACS3 for MACS2 or a current DiffBind release for the logged historical release.
 
+The scientific review verified an [immutable upstream snapshot](https://github.com/bioc/DiffBind/tree/da0b0442311f6264ac8a14eff80dbf9dcc97f614) whose DESCRIPTION version is 3.16.0. It supports the documented counting/normalization API interpretation; it does not reconstruct the installed dependency environment or prove the state of a historical fitted model.
+
 ## Candidate environments
 
 Install Conda using its official platform instructions linked by [Bioconda](https://bioconda.github.io/). These candidates are **not lockfiles, tested solvers, or verified historical environments**. Use `--dry-run` first; inspect platform builds and then intentionally repeat without that option. Channels are specified per command to avoid modifying global configuration.
@@ -149,6 +151,8 @@ BLACKLIST="$REF_DIR/hg38.blacklist.bed"
 Activate each installed environment only for the commands it contains: core for QC/alignment/tracks, MACS2 for peak calling, R for statistics, and figures for optional tools. For example, `conda activate cutrun-core` precedes core commands after an intentional installation. Activate `cutrun-macs2` for `macs2`, then return to core tools for interval filtering. These names are teaching candidates; they do not alter or recreate the private source environment automatically.
 
 On macOS, `sha256sum` may require GNU coreutils; alternatively record equivalent digests with `shasum -a 256`. GNU-specific wrapper options such as `grep -P` and `flock` need Linux or an explicit portable replacement. Work locally with adequate temporary disk and copy permitted outputs deliberately; do not edit raw inputs in a synchronized source archive.
+
+The original coverage worker also invokes **`bc -l` and `xargs`**. Check these utilities separately from the Conda bioinformatics packages; candidate environment lists do not establish their availability. A parent Bash process's error options are not automatically a verified child-worker contract. See [execution dependencies](../../software/execution-environments.md).
 
 Check that the combined reference has no duplicate sequence names, that whitelists do not overlap between species, and that every expected contig has the expected length. Record FASTA, BED, blacklist and annotation checksums and index-build commands. Avoid inferring species from a loose regular expression; [chapter 3](03-normalization-and-qc.md) demonstrates why.
 

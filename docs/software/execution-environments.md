@@ -13,6 +13,7 @@ The original workers assume a Linux shell, Conda activation, shared storage and 
 | Slurm | `sbatch` arrays/dependencies, resource and log settings; not installed by WSL2 |
 | awk, sed, grep, sort, cut, find, gzip, coreutils | Sample selection, text tables, sorting, compression and file checks; GNU-specific options need review on macOS |
 | flock / temporary locks | Some workers use job-scoped lock paths; distinct jobs may still race on shared outputs |
+| bc / xargs | Coverage worker tests the median with `bc -l` and launches concurrent Bash children with `xargs`; these are explicit runtime dependencies |
 | Environment modules | Site-dependent initialization in historical/external wrappers; no portable module specification established |
 | Python/R/Perl | Statistical code, helpers and HOMER runtime; dependencies belong to reviewed environments |
 
@@ -22,11 +23,14 @@ The original workers assume a Linux shell, Conda activation, shared storage and 
 
 ```bash
 command -v bash conda bowtie2 samtools Rscript
+command -v bc flock xargs
 uname -s
 df -h .
 ```
 
 **Input → output:** shell commands plus environment/reference identity → logs and analysis artifacts. The source's core read array is one-based while its averaging array is zero-based. `afterany` allows downstream jobs after upstream failures; output existence is weaker than successful completion. The coverage post-increment under `set -e` can return failure even when a track exists. See the [operational decision](../assays/cut-and-run/decisions.md#d18-scheduler-restarts-and-exit-status). No original scheduler wrapper was executed or published in this milestone.
+
+Parent `set -euo pipefail` is not an explicit error contract for a newly launched `bash -c` worker. Configure/check child options and producer exit statuses in a future reviewed implementation; a successful downstream log formatter can otherwise hide a failed producer. Assignment through `local name=$(...)` can also obscure failure. These source-level concerns were examined with synthetic shell examples, not original jobs.
 
 ## Setup and workflow links
 

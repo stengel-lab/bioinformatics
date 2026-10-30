@@ -12,6 +12,10 @@ Mapping against human plus yeast allows the selected workflow to retain target-g
 
 **Inputs/tools:** trimmed paired FASTQ, the combined Bowtie2 index, human-contig BED; [Bowtie2](../../software/bowtie2.md), [SAMtools](../../software/samtools.md). Versions of these two programs are not established in the selected evidence. The source requests 16 CPUs, 64 GB and 24 hours; these are not measured requirements.
 
+**How alignment works:** Bowtie2 uses an indexed reference to find candidate matches for read segments, then evaluates extended alignments with mismatches/gaps and paired-end geometry. Pairing supplies information beyond either mate alone. Conserved human/yeast sequence can create competing placements in the combined index. MAPQ reflects uncertainty under that search/scoring model; filtering on it selects records but does not repair a wrong reference or recover a lost mate. The actual index construction remains [unrecovered](reference-audit.md#what-reference-construction-can-be-recovered).
+
+**What sorting/indexing accomplish:** coordinate sorting orders existing alignment records; indexing builds a lookup for reference regions. Neither operation improves the alignment or proves species identity. Check the BAM header/dictionary and the complete contig manifest before interpreting indexed counts.
+
 ### Observed alignment and MAPQ filtering
 
 **Configured reconstruction:**
@@ -71,6 +75,8 @@ samtools idxstats "$COMBINED_BAM" > "qc/${SAMPLE}.idxstats.tsv"
 
 Peak calling asks where enrichment is distinguishable from a caller's background model. A peak list is an interval selection, not a table of biological replicate measurements. Transcription-factor binding is often focal, while some chromatin marks form broader domains; target biology and controls must drive the choice. Neither target class guarantees one peak shape.
 
+**How the model works:** MACS compares fragment pileup with an estimated background using a Poisson enrichment model and corrects significance across tested positions/regions. With a suitable control, background can reflect experimental biases; without `-c`, a background is still estimated from the treatment/reference assumptions rather than measured in an independent negative-control library. A small q-value cannot distinguish an antibody-specific biological signal from every systematic artifact. Exact background calculation is version-dependent; the [MACS2 implementation](https://github.com/macs3-project/MACS/blob/v2.2.9.1/MACS2/callpeak_cmd.py) is an external reference, not an established lab version.
+
 **Inputs/tools:** human BAM; [MACS2](../../software/macs2.md). Version is unspecified in the selected sources. Historical scripts show alternatives but do not identify a universally approved caller. The selected command has **no `-c` background-control BAM**.
 
 **Configured narrow-peak reconstruction, CR-S01 lines 228–235:**
@@ -102,6 +108,18 @@ macs2 callpeak -t "$HUMAN_BAM" -f BAMPE -n "${SAMPLE}_broad" \
 
 This changes peak shape, thresholds, duplicate policy and output tracks simultaneously. BroadPeak/gappedPeak output requires broad-aware import and plotting; the selected DiffBind helper assumes narrow peaks. Do not just toggle `--broad` while leaving downstream parsing unchanged. MACS pileup tracks requested by `-B --SPMR` are different products from deepTools coverage.
 
+**Narrow versus broad:** narrow calling emphasizes local enriched cores and summits. Broad mode uses stronger enrichment to seed regions and a more permissive threshold to connect surrounding enrichment, producing domain-like intervals. `--broad-cutoff 0.1` governs that weaker enrichment threshold; it is not a fold-change cutoff. Domain coverage and a focal summit are different biological questions.
+
+| Target/question | Recommended comparison starting point | What requires approval |
+|---|---|---|
+| Focal sequence-specific transcription factor | Observed narrow baseline plus controls and replicate support | Caller, threshold, fragment class and reproducible-peak rule |
+| BCOR-associated chromatin occupancy | Narrow baseline if profiles are focal; compare a domain-aware view if the signal is broad | Antibody specificity, target-loss/background controls, region width and interpretation of associated rather than direct sequence-specific binding |
+| Broad histone modification such as H3K27me3 | Broad/domain candidate and count intervals that preserve the biological domain question | Caller/background, boundaries, duplicate policy and whether fixed summit windows are appropriate |
+
+BCOR-associated occupancy is not interchangeable with H2AK119ub/H3K27me3 signal. [Primary BCOR/Polycomb work](https://www.nature.com/articles/s41467-019-09250-6) motivates separating these measurements; it does not establish a universally correct peak shape. Histone marks can also be focal. These are comparison defaults, not substitutions for the actual narrow lab command.
+
+**Negative controls and reproducibility:** a compatible IgG/no-primary library helps assess nonspecific recovery; a target-loss or orthogonal experiment can help assess specificity when available. Controls must be suitable for the assay and adequately sampled; an untreated target-IP is not background. Compare independently called biological replicates, widths and local enrichment before merging/averaging. A stringent q-value without a control is a methodological choice requiring evidence, not a syntax error; neither controls nor q-values alone establish reproducible binding.
+
 **E:** [SEACR](https://github.com/FredHutch/SEACR) was developed for sparse CUT&RUN signal, and nf-core 3.2.2 defaults to SEACR with control-aware options. **L/U:** a footprint wrapper looks up SEACR, but complete SEACR execution is not established in the selected lab chain. A caller/control comparison is a proposed study, not an already validated replacement. Earlier `--shift -100 --extsize 200` flags must not be copied as an ATAC-style CUT&RUN correction; MACS2 BAMPE handling changes how shift/model options apply ([versioned source](https://raw.githubusercontent.com/macs3-project/MACS/v2.2.9.1/MACS2/OptValidator.py)).
 
 **QC/troubleshooting:** inspect enrichment at known positive and negative regions, target-appropriate peak widths, peak totals, background-control signal and replicate overlap. An empty list may indicate low enrichment, an unsuitable model or a stringent cutoff. Do not lower thresholds until a biologically attractive answer appears. **Output → next:** retain raw peak lists and the explicit caller decision.
@@ -123,6 +141,8 @@ bedtools intersect -u -a "$RAW_PEAKS" -b "$BLACKLIST" \
 ```
 
 `-v` retains intervals with no overlap; `-u` reports each overlapping A interval once. Whole peaks are excluded on any overlap. **U:** the source falls back to raw peaks if the filtered list is empty; the sample-sheet generator still predicts filtered paths. Existing empty files can also satisfy skip logic. **P:** stop and review an empty filtered list; do not silently reintroduce excluded regions. Set the following variable only after approving the actual file:
+
+An interval overlap is a coordinate comparison, not a test that a signal is artifactual. The mask must be justified separately. The [CUT&RUN suspect-list study](https://link.springer.com/article/10.1186/s13059-023-03027-3) provides an assay-specific artifact resource that differs from an ENCODE blacklist. Filtering alignments before a caller can change its background/scaling; filtering peaks afterward only removes selected intervals. Review that distinction before changing the lab's peak-only approach.
 
 ```bash
 PEAKS_FOR_QC="$FILTERED_PEAKS"

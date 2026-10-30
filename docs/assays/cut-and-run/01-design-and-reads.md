@@ -79,6 +79,8 @@ The source labels its combined reference `hg38-sacCer3`; that label does not ide
 
 **Input/tool:** original R1/R2; [FastQC](../../software/fastqc.md). **L, CR-S01** runs FastQC before and after trimming. Its version is not established by the reviewed evidence.
 
+**How the computation works:** FastQC summarizes properties such as quality by read position and repeated sequence content over the input reads. Phred quality expresses an estimated base-call error probability (`Q = -10 log10(p)`): Q20 corresponds to an estimated 1% error probability, not a rule that an entire read is bad. Looking at distributions by position helps distinguish a consistent low-quality tail from a few poor bases. The [FastQC project](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/) describes its reports; quality flags do not test antibody specificity.
+
 **Configured example:**
 
 ```bash
@@ -96,6 +98,8 @@ fastqc --threads "$THREADS" --outdir qc/raw "$R1" "$R2"
 **Scientific purpose:** remove nonbiological adapter sequence so short inserts can map correctly. Avoid discarding informative short CUT&RUN fragments by importing an unrelated ATAC-seq or ChIP-seq length rule. Read length after trimming and paired-end insert/fragment length are different quantities.
 
 **Inputs/tools:** paired raw FASTQ; [Cutadapt](../../software/cutadapt.md). **L, CR-S01 lines 44–50 and CR-L01:** Cutadapt 5.1 with Python 3.11.9 was recorded in a historical run; the environment is not locked.
+
+**How the computation works:** adapter matching is error-tolerant sequence matching, allowing a read-through adapter to be recognized even with sequencing errors. Quality trimming selects low-quality ends rather than deleting every base whose quality is below 20. Length filtering is applied to the resulting reads, and paired filtering decides whether the pair survives. These operations can change which fragments are observable, so compare both retained yield and the length distribution rather than optimizing a single QC flag. Exact matching defaults belong to the installed version, not just the abbreviated adapter string.
 
 **Configured reconstruction:**
 

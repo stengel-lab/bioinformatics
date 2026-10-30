@@ -17,7 +17,11 @@ db <- dba.count(db, bParallel = FALSE, bRemoveDuplicates = TRUE,
                 bUseSummarizeOverlaps = TRUE)
 ```
 
-**Input → output:** sample sheet, peaks, BAM/index → counted object → contrasts/model reports and saved objects. The source does not explicitly set summit recentering, count filters or every consensus default. Duplicate removal here differs from the upstream BAM/coverage policy. Custom numeric normalization is supported, but check order, positivity and retrieved normalization state. Standard default blacklist behavior differs from the spike branch's explicit disabling. Follow the tutorial for report-sign mapping and the significance precheck that can suppress all-site CSV output.
+**Input → output:** sample sheet, peaks, BAM/index → counted object → contrasts/model reports and saved objects. The source leaves consensus/summit/filter settings unspecified. The verified [3.16.0 source](https://github.com/bioc/DiffBind/tree/da0b0442311f6264ac8a14eff80dbf9dcc97f614) defaults to `minOverlap=2`, `summits=200`, `filter=1`; inspect the actual resulting ranges rather than assume original peak widths.
+
+**Duplicate policy correction:** the final summarizeOverlaps count pass filters duplicate-marked records; it does not identify unmarked coordinate duplicates. Default summit estimation also involves a preliminary built-in counting pass, so do not describe every internal pass as identical. The upstream worker has no marking stage. Thus the selected switch is not proof of uniformly deduplicated counts ([counting implementation](https://github.com/bioc/DiffBind/blob/da0b0442311f6264ac8a14eff80dbf9dcc97f614/R/counts.R)).
+
+The same package snapshot accepts numeric normalization vectors and directly assigns them as DESeq2 size factors in its design-based path. The lab script already matches sample IDs and retrieves normalization diagnostics. Check their actual values/order/positivity, model design and branch-specific masks; `library=FULL` is not an automatic additional depth multiplier on this vector. Follow the [review](../assays/cut-and-run/scientific-review.md) for report sign, full-precision selection, coordinate conversion and the precheck that can suppress all-site CSV output.
 
 ## Setup and workflow links
 

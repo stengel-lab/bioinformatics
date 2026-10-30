@@ -50,7 +50,11 @@ db <- dba.count(db, bParallel = FALSE, bRemoveDuplicates = TRUE,
 db_reads <- dba.count(db, peaks = NULL, score = DBA_SCORE_READS)
 ```
 
-`bRemoveDuplicates=TRUE` changes count handling relative to BAMs/tracks that retain duplicates and MACS2's `auto` policy. The source does not explicitly set consensus `minOverlap`, summit recentering, count filters or a batch-aware design. Record the installed defaults and actual counted regions before calling the analysis reproducible. Counting can alter interval widths relative to raw peaks; inspect the returned ranges.
+**Duplicate correction:** in the final summarizeOverlaps counting pass, DiffBind 3.16.0 implements `bRemoveDuplicates=TRUE` by excluding duplicate-flagged records. That pass does not discover unmarked coordinate duplicates. Default summit estimation also uses a preliminary built-in counting pass, so internal stages should not be described as uniformly identical. The fresh FASTQ→BAM worker has no duplicate-marking step, and the switch alone does not establish uniformly deduplicated counts. Inspect actual BAM flags and returned ranges before attributing a difference to duplicate removal ([versioned counting code](https://github.com/bioc/DiffBind/blob/da0b0442311f6264ac8a14eff80dbf9dcc97f614/R/counts.R)).
+
+**How overlap counting works:** a consensus interval universe is formed, then eligible alignments/pairs are assigned under the overlap algorithm. The selected path uses summarizeOverlaps with pair detection and its configured handling of unmatched/ambiguous records; this is not simply summing coverage bins. Lost mates and overlapping features can change eligibility. Counting BAMs preserves biological samples; pooling them first would remove replicate-level variation.
+
+The source leaves important counting defaults unspecified. The verified [3.16.0 API](https://github.com/bioc/DiffBind/blob/da0b0442311f6264ac8a14eff80dbf9dcc97f614/man/dba.count.Rd) supplies `minOverlap=2`, `summits=200`, `filter=1`. The first refers to support across input peaksets; the second can recenter intervals into **401 bp** windows (200 bp each side plus center), rather than retaining original widths. These are installed defaults, not explicit lab selections. Inspect the final ranges, filter state and design. For broad biology, fixed summit windows may answer a different question from domain-wide counting.
 
 **Outputs:** counted DiffBind object, read-score export and a common pre-branch count table. **L:** the source exports `normalized_read_counts_all_samples.csv` before standard/spike model branching. Its filename does not establish that it contains spike-normalized counts. Preserve the normalization state and sample order rather than infer them from names.
 
@@ -71,6 +75,8 @@ db_standard <- dba.analyze(db_standard)
 
 This is not a reviewed batch/donor model. Inspect the actual contrast table and design. Standard library-size normalization carries assumptions about stable abundance structure; a plausible global occupancy change is a reason to assess calibration, not proof that calibration is valid.
 
+**How the statistical model works:** DESeq2 models each interval's replicate counts with a negative-binomial distribution, allowing variance above a Poisson model. The expected count combines a sample size factor and an interval abundance whose condition effects are represented by a design matrix. Dispersion estimation uses information across intervals; a condition test asks whether the relevant effect is distinguishable from zero. Multiple-testing adjustment applies over the tested universe. This is why design, masks and normalization matter independently. A model cannot separate perfectly confounded condition and batch labels. See the [DESeq2 vignette](https://bioconductor.org/packages/release/bioc/vignettes/DESeq2/inst/doc/DESeq2.html).
+
 ### Observed spike branch and its review gate
 
 The source matches `spike_counts.tsv` to DiffBind sample IDs and forms `S_i / median(S)`. It checks IDs/numeric conversion and missing matches, but calibration and strict positivity still need scientific and implementation review. A zero denominator/factor is not acceptable for a logarithmic count model.
@@ -89,7 +95,9 @@ db_spike <- dba.analyze(db_spike, method = DBA_DESEQ2,
                        bGreylist = FALSE, bBlacklist = FALSE)
 ```
 
-The positivity guards are proposed teaching safeguards. **E:** numeric normalization vectors are supported by DiffBind's normalization interface ([manual](https://bioconductor.org/packages/release/bioc/manuals/DiffBind/man/DiffBind.pdf), [release-family source](https://raw.githubusercontent.com/bioc/DiffBind/RELEASE_3_20/R/normalize.R)). This does not prove the source's factor ordering or resulting model denominators. Retrieve and inspect the installed implementation's normalization state and verify with a small designed dataset before relying on biological fold changes.
+The positivity guards are proposed teaching safeguards. **E — now verified against package version 3.16.0:** the [normalization interface](https://github.com/bioc/DiffBind/blob/da0b0442311f6264ac8a14eff80dbf9dcc97f614/R/normalize.R) accepts a numeric vector, and its [DESeq2 adapter](https://github.com/bioc/DiffBind/blob/da0b0442311f6264ac8a14eff80dbf9dcc97f614/R/analyze_deseq2.R#L188-L196) directly assigns the supplied values as size factors in the design-based path. `library=DBA_LIBSIZE_FULL` does not automatically multiply that vector by library depth there. The intended denominator direction `S/median(S)` is therefore consistent with this API; do not invert it as a presumed bug fix.
+
+**L:** the source already matches spike IDs to the counted sample IDs and retrieves normalization state at CR-S05:538–542, writing `debug_spike_normalize_retrieve.csv` and a text record. Review those records and the realized model/sample order; do not describe retrieval or ID matching as absent. Also check positivity/finiteness and state after contrast setup/analysis. Static source verification is narrower than executing and scientifically validating the fitted model.
 
 **Important confound:** the standard branch leaves blacklist behavior at defaults, while the spike branch explicitly disables blacklist and greylist application. Different tested interval universes can produce different results independently of normalization. Compare common regions with consistent approved masks in a future controlled exercise; do not silently change history.
 
@@ -97,7 +105,11 @@ The positivity guards are proposed teaching safeguards. **E:** numeric normaliza
 
 **L:** after matching configured contrasts, reporting uses `dba.report(..., th=1, bFlip=NeedsFlip)`. However, an earlier significance-count precheck can skip a contrast with zero default-significant sites. Thus `th=1` does **not** guarantee an all-sites CSV for every contrast. Check statuses including `generated`, `no_differential_sites` and `report_failed` in `contrast_summary.csv`; a missing file does not mean there are no bound regions.
 
-The selected script saves per-branch reports, `dba_analysis.RData`, summary/status files and debug information, plus a combined summary. Typical report fields include coordinates, `Fold`, `FDR`, `Conc` and group concentrations; verify columns in the actual installed version. Do not assume a `baseMean` column exists.
+The [3.16.0 report contract](https://github.com/bioc/DiffBind/blob/da0b0442311f6264ac8a14eff80dbf9dcc97f614/man/dba.report.Rd) defines positive Fold as greater binding in group 1; `bFlip` swaps the groups. The source flips when group 1 is the configured denominator, so its static logic is consistent with positive **numerator** enrichment. No sign bug was found. Confirm the intended comparison with metadata and a known-direction toy model before biological interpretation.
+
+The selected script saves per-branch reports, `dba_analysis.RData`, summary/status files and debug information, plus a combined summary. GRanges-to-CSV output can use `seqnames/start/end/width/strand`; explicit data-frame output can use `Chr/Start/End`. Statistics include `Fold`, `FDR`, `Conc` and group concentrations. Verify the actual schema; do not assume a `baseMean` column exists.
+
+**Precision decision:** source `dba.report()` leaves the 3.16.0 default `precision=2:3` in place. Thresholding exported rounded Fold/FDR values can change membership near a cutoff. **P:** for a future selection/export, request `precision=0` to retain full precision and keep rounded display tables separately. This changes reporting precision, not the peak caller or hypothesis test; the observed report invocation above remains the reconstruction.
 
 **QC:** compare replicate count distributions, sample relationships, model warnings, normalization factors, tested region totals and the sign of a known contrast. Examine effect sizes alongside FDR; a low FDR is not an effect magnitude. A batch-confounded or underpowered experiment is not rescued by a different plotting threshold. **Output → next:** reports whose direction, tested universe and normalization are explicit.
 
@@ -105,20 +117,30 @@ The selected script saves per-branch reports, `dba_analysis.RData`, summary/stat
 
 **Purpose:** convert a statistical question into defined intervals for downstream motif/annotation queries. **L, CR-S09/10:** uses FDR < 0.05 and absolute log2-fold threshold 0.5849625 (log2 1.5). One set builder takes only negative significant changes and compares unions/shared intervals across contrasts or timepoints. Those sets are not biological-replicate consensus peaks.
 
-**Coordinate review gate:** source helpers copy `Start`/`End` directly from DiffBind CSV into BED. DiffBind/GRanges ranges are generally one-based closed; BED is zero-based half-open. Confirm the exporter contract. If coordinates are GRanges-style, subtract one from start and retain end. A one-base error can affect sequence extraction and overlap. Source `awk -F,` parsing also does not safely handle quoted CSV fields.
+**Coordinate contract:** source helpers copy `Start`/`End` or `start/end` directly from DiffBind CSV into BED. Verified DiffBind 3.16.0 defaults to a GRanges result; its CSV coordinates are one-based closed. BED is zero-based half-open, so a direct copy violates the boundary contract: convert start to start−1 and retain end. Verify the producer for each historical CSV before changing it; column capitalization alone does not prove coordinate origin. A one-base defect can affect sequence extraction and overlap without changing the upstream statistical model. Source `awk -F,` parsing also does not safely handle quoted CSV fields.
 
 **P — configured, coordinate-explicit R teaching export** (not the existing helper). This presumes the stated column names and GRanges coordinate convention have been verified:
 
 ```r
 report <- read.csv("reports/treated_vs_control.csv", stringsAsFactors = FALSE)
-needed <- c("Chr", "Start", "End", "Fold", "FDR")
-stopifnot(all(needed %in% names(report)))
-keep <- complete.cases(report[, needed]) & report$FDR < 0.05 &
-        abs(report$Fold) > log2(1.5)
-selected <- report[keep, ]
-stopifnot(all(selected$Start >= 1), all(selected$End >= selected$Start))
-bed <- data.frame(chr = selected$Chr, start = selected$Start - 1L,
-                  end = selected$End)
+if (all(c("seqnames", "start", "end") %in% names(report))) {
+  coords <- report[, c("seqnames", "start", "end")]
+} else if (all(c("Chr", "Start", "End") %in% names(report))) {
+  coords <- report[, c("Chr", "Start", "End")]
+} else {
+  stop("Unrecognized coordinate schema: inspect the producer")
+}
+names(coords) <- c("chr", "start", "end")
+stopifnot(all(c("Fold", "FDR") %in% names(report)))
+valid <- complete.cases(coords) & is.finite(report$Fold) & is.finite(report$FDR)
+keep <- valid & report$FDR < 0.05 & abs(report$Fold) >= log2(1.5)
+selected <- coords[keep, ]
+stopifnot(all(is.finite(selected$start)), all(is.finite(selected$end)),
+          all(selected$start >= 1), all(selected$end >= selected$start),
+          all(selected$start == floor(selected$start)),
+          all(selected$end == floor(selected$end)))
+bed <- data.frame(chr = selected$chr, start = selected$start - 1L,
+                  end = selected$end)
 dir.create("regions", showWarnings = FALSE)
 write.table(bed, "regions/differential.bed", sep = "\t", quote = FALSE,
             row.names = FALSE, col.names = FALSE)
@@ -143,6 +165,8 @@ findMotifsGenome.pl regions/differential.bed hg38 motifs/differential \
 ```
 
 The source requests a 200 bp analysis window and 8-base motif search length. These choices may suit focal sites differently from broad domains. It does not specify a custom matched background with `-bg`. **P:** review GC/length/accessible-region matching, target class, window placement and multiple-testing interpretation before selecting background parameters. Do not assume an entire broad domain is analyzed just because its BED interval is wide.
+
+**How enrichment works:** observed motif occurrences in foreground sequences are compared with a background sequence distribution. Foreground selection, window size, GC/repeat composition and background definition can create or remove apparent enrichment. A factor-associated motif may belong to a partner or another protein with a similar sequence preference. In a BCOR-associated occupancy experiment, motif enrichment is particularly a hypothesis about recruitment/partners, not evidence of a BCOR DNA-binding motif. Keep motif association separate from target specificity and functional regulation.
 
 **Outputs/QC:** HOMER enrichment tables, HTML, known/de novo motifs and sequence/background summaries as provided by the installed release. Check number of valid sequences, reference consistency, background composition, low-complexity artifacts and whether results persist across reasonable window/background choices. HOMER's upstream web manual was unavailable during this review; the source invocation is confirmed, runtime/version-specific output behavior remains untested.
 

@@ -5,6 +5,9 @@ repo_name: stengel-lab/bioinformatics
 edit_uri: ''
 docs_dir: docs
 site_dir: site
+exclude_docs: |
+  **/__pycache__/**
+  **/*.pyc
 theme:
   name: material
   font: false
@@ -62,6 +65,8 @@ nav:
           - Installation and references: assays/cut-and-run/installation.md
           - Source reconstruction: assays/cut-and-run/sources.md
           - Methods comparison: assays/cut-and-run/methods-comparison.md
+          - Scientific review summary: assays/cut-and-run/scientific-review.md
+          - Reference and spike audit: assays/cut-and-run/reference-audit.md
           - Decisions and uncertainties: assays/cut-and-run/decisions.md
           - Validation record: assays/cut-and-run/validation.md
           - Next steps: assays/cut-and-run/next-steps.md
