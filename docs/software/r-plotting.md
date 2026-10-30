@@ -1,0 +1,80 @@
+# R plotting and numerical libraries
+
+The custom R code uses plotting libraries to render PCA, correlations, heatmaps, MA plots and annotation summaries. Plotting transformations and labels can change interpretation even when the underlying statistical test is unchanged.
+
+| Library | Observed role | Primary reference |
+|---|---|---|
+| ggplot2 | Scatter/MA/PCA and summary plots | [Project](https://ggplot2.tidyverse.org/) |
+| ggrepel | Repelled labels on plots | [Project](https://ggrepel.slowkow.com/) |
+| corrplot | Correlation display | [Maintainer documentation](https://taiyun.github.io/corrplot/) |
+| pheatmap | Matrix heatmaps | [CRAN](https://cran.r-project.org/web/packages/pheatmap/index.html) |
+| stats / grid | PCA, transformations and layout; distributed with R | [R manuals](https://cran.r-project.org/manuals.html) |
+| `rowVars` provider | Variance filtering called without an explicit namespace | U: verify the attached/exported provider in the installed session; do not infer an independently versioned package from the function name alone |
+
+## Install
+
+```r
+install.packages(c("ggplot2", "ggrepel", "corrplot", "pheatmap"),
+                 repos = "https://cloud.r-project.org")
+```
+
+Installation examples are candidates, **not verified installations**. Check your platform and solve first with `--dry-run` when using Conda. Linux and macOS package builds vary; run Linux command examples in WSL2 on Windows. See [installation help](../installation/index.md) for platform setup and [shared workflow environments](../assays/cut-and-run/installation.md#candidate-environments) to avoid installing a separate environment for every tool.
+
+## Verify installation
+
+```r
+library(ggplot2)
+packageVersion("ggplot2")
+library(ggrepel)
+packageVersion("ggrepel")
+library(corrplot)
+packageVersion("corrplot")
+library(pheatmap)
+packageVersion("pheatmap")
+sessionInfo()
+```
+
+Confirm that the command/package resolves in the intended environment. A version or startup check does not validate an analysis.
+
+## Basic syntax
+
+```text
+ggplot(data, aes(x, y)) + geom_point()
+```
+
+## Common options
+
+| Option / setting | Meaning |
+|---|---|
+| `aes()` | Map table columns to visual attributes. |
+| `geom_point()` | Draw one point per row. |
+| `geom_text_repel()` | Place labels with reduced overlap. |
+| `scale_x_log10()` | Log-transform the displayed x-axis; requires positive values. |
+
+## Workflow example
+
+Examples use fictional sample names and require the indicated inputs. Analysis commands have not been executed as a complete teaching workflow.
+
+```r
+library(ggplot2)
+library(ggrepel)
+toy <- data.frame(abundance = c(10, 100, 1000),
+                  log2_fold = c(-1, 0, 1), label = c("a", "b", "c"))
+p <- ggplot(toy, aes(abundance, log2_fold, label = label)) +
+     geom_point() + geom_text_repel() + scale_x_log10()
+print(p)
+```
+
+## Expected inputs and outputs
+
+tables/matrices with defined units → figure objects/files. This synthetic plot is not a recreation of lab results. Source PCA uses a common pre-branch matrix, log2(x+1) and unit-variance scaling. MA modes may use different abundance coordinates and report Fold versus concentration-derived M. Review captions, sign, shared scales and missing-as-zero assumptions; never label a rank fallback as measured abundance.
+
+## Documentation and lab notes
+
+Installation notes: cRAN plotting packages plus the compatible statistical environment. Candidate install commands and version recording are centralized in the setup guide. Base R `stats`/`grid` need no separate CRAN installation. An attached dependency can accidentally provide a function; record `find("rowVars")` and qualify it in a future reviewed implementation.
+
+**Function:** Statistical figure support. **Evidence:** [CR-S05 / CR-S12 / CR-S14](../assays/cut-and-run/sources.md).
+
+**Observed version evidence:** R 4.4.3 logged; individual plotting/numerical package versions not established.
+
+Continue to [relevant CUT&RUN lesson](../assays/cut-and-run/04-differential-and-interpretation.md#stage-16-figures-that-preserve-the-measurement) or [software catalog](index.md).

@@ -1,0 +1,26 @@
+flowchart TB
+  A["Design, controls, paired FASTQs<br/>and reference identities"] --> B["FastQC → Cutadapt → FastQC<br/>retain informative short reads"]
+  B --> C["Combined human + yeast alignment<br/>Bowtie2 → MAPQ 30 → sorted/indexed BAM"]
+  C --> D["Human-contig BAM<br/>review pairs, duplicates and mitochondria"]
+  D --> E["MACS2 narrow peaks<br/>target-dependent broad/control alternatives"]
+  E --> F["Blacklist review + enrichment QC<br/>empty filtered set requires review"]
+  C --> G{"Reference, spike protocol<br/>and counts approved?"}
+  G -->|"pending: no quantitative claim"| H["Resolve contigs, calibration<br/>and complete cohort first"]
+  G -->|"approved"| Q["Approved calibration count table<br/>review cohort and positive factors"]
+  Q --> I["Spike-scaled coverage<br/>multiplier = median / spike count"]
+  D --> J["Human CPM coverage"]
+  I --> K["Individual replicate QC<br/>optional equal-weight track means"]
+  J --> K
+  D --> L["Per-replicate DiffBind counts<br/>explicit design and contrast direction"]
+  F --> L
+  L --> M["Standard model + reviewed spike branch<br/>inspect masks, factors and count universe"]
+  Q -->|"spike branch only"| M
+  M --> N["Reports → coordinate-safe region sets<br/>MA plots, HOMER motifs and annotation"]
+  K --> O["Matching-reference browser views<br/>fixed-region heatmaps and interpretation"]
+  N --> O
+  classDef gate fill:#fff2cc,stroke:#8f6200,color:#17212b
+  classDef process fill:#e8f2fa,stroke:#245b83,color:#17212b
+  classDef warning fill:#fbe9e7,stroke:#a63e30,color:#17212b
+  class A,B,C,D,E,F,I,J,K,L,M,N,O,Q process
+  class G gate
+  class H warning

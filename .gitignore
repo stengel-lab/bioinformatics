@@ -218,3 +218,41 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Private discovery records and local source material
+/.local-audit/
+/private/
+/data/
+/results/
+.env.*
+secrets/
+.aws/
+.ssh/
+*.pem
+*.key
+*.fastq
+*.fastq.gz
+*.fq
+*.fq.gz
+*.bam
+*.sam
+*.bai
+*.cram
+*.crai
+*.bigWig
+*.bw
+*.hic
+*.cool
+*.mcool
+
+# Documentation preview environment
+/.venv-docs/
+# Additional scientific outputs kept out of public history
+*.bedgraph
+*.bedGraph
+*.tdf
+*.pairs
+*.pairs.gz
+*.pairsam
+*.pdb
+*.a3m
