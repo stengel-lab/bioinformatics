@@ -1,15 +1,13 @@
 # Contributing
 
-Use a focused feature branch and submit original Markdown documentation in small, reviewable changes. Begin with a scientific question and the reader's prerequisites.
+Submit focused changes on a feature branch and open a pull request for review.
 
-1. Select the [tool](docs/contributing/templates/tool.md) or [tutorial](docs/contributing/templates/tutorial.md) template.
-2. Explain the scientific rationale, inputs, outputs, parameters, and interpretation limits.
-3. Cite primary documentation for software behavior. Record an explicit version only when supported by evidence.
-4. Use public or synthetic inputs with a documented origin. Replace private paths and metadata with descriptive placeholders.
-5. Apply the [publication review](docs/contributing/publication.md) and [provenance conventions](docs/contributing/provenance.md).
-6. Preview with `python -m mkdocs build --strict` in the documentation environment. This checks documentation construction; it does not validate analysis commands.
-7. Request scientific and software review. Keep execution status and scientific review status separate.
+- **Pipelines:** use `docs/pipelines/<assay>/index.md` for a short overview and `walkthrough.md` for one continuous processing lesson. Add pages only when necessary.
+- **Tools:** use one standalone page per program or package under `docs/tools/`, shared by multiple pipelines. Develop installation, usage, parameters, and examples together.
+- **Setup:** keep operating-system, environment, dependency, and reference-data guidance under `docs/setup/`; link to it from walkthroughs.
+- **Executable workflows:** reserve the root `workflows/` directory for future processing code. Keep `docs/` dedicated to website content.
+- **Navigation:** retain Home, Pipelines, Tools, and Setup as the four primary sections. Add guides when they contain useful material; avoid empty hierarchies and placeholder directories.
 
-Do not copy historical lab scripts into this repository without permission and content review. Do not infer that a script is authoritative from its name, modification date, or version suffix. Avoid including environment exports containing private prefixes or machine state.
+Use original explanations, primary references, and permitted public or synthetic examples. Review paths, metadata, credentials, and publication rights before committing. Keep private audits, laboratory source archives, unpublished results, and real sample metadata out of Git.
 
-New automation and production pipelines require a separate design milestone after the educational material and source inventory have been reviewed.
+Run `python -m mkdocs build --strict` and `python scripts/check_docs.py` before submitting. See [README](README.md) for preview commands. Do not merge or publish without review.

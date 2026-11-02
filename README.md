@@ -2,22 +2,33 @@
 
 **[Read the documentation →](https://stengel-lab.github.io/bioinformatics/)**
 
-A documentation-first bioinformatics resource for the Stengel Lab at Albert Einstein College of Medicine. v0.1 includes a searchable software library, a step-by-step CUT&RUN teaching draft, and installation help for Linux, macOS, Windows/WSL2 and HPC.
+A centralized collection of educational bioinformatics resources, software documentation, and standardized processing workflows for the Stengel Lab and collaborators.
 
-- [Software library](docs/software/index.md): installation, verification, syntax, common options and examples.
-- [CUT&RUN walkthrough](docs/assays/cut-and-run/index.md): paired reads through QC, trimming, alignment, peaks, coverage and downstream interpretation.
-- [Getting started](docs/getting-started/index.md) and [installation](docs/installation/index.md).
-- [Other assays](docs/assays/index.md): outlines, not yet developed.
-- [Contributing](CONTRIBUTING.md) and [local preview](docs/getting-started/preview.md).
+- [Home](docs/index.md)
+- [Pipelines](docs/pipelines/index.md)
+- [Tools](docs/tools/index.md)
+- [Setup](docs/setup/index.md)
 
 ## Status
 
-CUT&RUN is an educational draft; commands and installation candidates are not end-to-end analysis validated. Detailed methodological review is available as secondary reference. No production pipeline or sequencing dataset is distributed.
+The documentation source contains four section landing pages. Individual tutorials, tool references, and platform guides will be developed incrementally. The previous documentation is preserved in the [`v0.1-archive` tag](https://github.com/stengel-lab/bioinformatics/tree/v0.1-archive) and Git history.
 
 ## Documentation development
 
-Markdown sources live in `docs/`; `mkdocs.yml` defines navigation and search. GitHub Actions builds and checks pull requests, then deploys GitHub Pages from `main` using the built-in Actions token. See [website publishing](docs/contributing/website.md).
+Markdown website content lives in `docs/`. Reserve `workflows/` for future executable processing pipelines; it is not created yet. See [contribution conventions](CONTRIBUTING.md).
 
-Private inventories, original scripts with unclear publication rights, unpublished findings, sample metadata, credentials and institutional configuration are excluded from Git and from the site. See the [publication boundary](docs/contributing/publication.md).
+With Python 3.11 or newer in an isolated environment, install the documentation dependencies and preview or check the site:
+
+```sh
+python -m pip install -r requirements-docs.txt
+python -m mkdocs serve
+```
+
+```sh
+python -m mkdocs build --strict
+python scripts/check_docs.py
+```
+
+GitHub Actions checks pull requests and deploys only from `main`, using the built-in Actions token. Only generated `site/` content is uploaded. Private audit records, source archives, sequencing data, unpublished results, credentials, and institutional configuration must stay outside tracked content.
 
 The repository has no license file. Maintainers must select terms before representing its contents as licensed for reuse.

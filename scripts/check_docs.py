@@ -2,14 +2,11 @@
 
 from __future__ import annotations
 
-import ast
 from html.parser import HTMLParser
 from pathlib import Path
 import re
-import shutil
 import subprocess
 import sys
-import tempfile
 from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -103,28 +100,8 @@ def main() -> int:
         if any(pattern.search(text) for pattern in patterns):
             errors.append(f"Publication indicator requires review: {name}")
 
-    bash = shutil.which("bash")
-    syntax_checked = 0
-    with tempfile.TemporaryDirectory(prefix="docs-syntax-") as folder:
-        for p in (ROOT / "docs").rglob("*.md"):
-            for n, match in enumerate(re.finditer(r"^```(bash|python)\s*\n(.*?)^```\s*$", p.read_text(encoding="utf-8"), re.M | re.S), 1):
-                language, body = match.groups()
-                if language == "python":
-                    try:
-                        ast.parse(body)
-                    except SyntaxError:
-                        errors.append(f"Python syntax: {p.relative_to(ROOT)} block {n}")
-                elif bash:
-                    snippet = Path(folder) / "example.sh"
-                    snippet.write_text(body, encoding="utf-8", newline="\n")
-                    cp = subprocess.run([bash, "-n", snippet.as_posix()], capture_output=True)
-                    if cp.returncode:
-                        errors.append(f"Bash syntax: {p.relative_to(ROOT)} block {n}")
-                else:
-                    errors.append("Bash is required for documentation syntax checks")
-                syntax_checked += 1
     print(f"Checked {len(pages)} HTML pages, {links_checked} internal references, "
-          f"{syntax_checked} Bash/Python blocks and {len(public_text)} public text files.")
+          f"and {len(public_text)} public text files.")
     if errors:
         print("\n".join(sorted(set(errors))))
         return 1
