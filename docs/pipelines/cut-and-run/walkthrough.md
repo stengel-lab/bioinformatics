@@ -1,7 +1,5 @@
 # CUT&RUN: baseline command walkthrough
 
-This is a **first draft for review**. Its processing commands come from three scripts supplied by the lab bioinformatics lead: `sbatch_cutrun_pipeline.sbatch`, `bigwigs_array.sbatch`, and `macs2_array.sh`. Sample names and filesystem paths below are generic substitutions. Slurm-array discovery, concurrency, and restart behavior are intentionally separate from the scientific commands.
-
 ## Before starting
 
 Have paired FASTQ files, an hg38 Bowtie2 index, and FastQC, Cutadapt, Bowtie2, SAMtools, deepTools, and MACS2 available in the appropriate environments. An [hg38 reference-resource guide](../../setup/references/hg38.md) explains what needs to be documented; the **exact FASTA/index build used by the lab remains to be verified**. Tool installation pages will be added after we agree on their format.
