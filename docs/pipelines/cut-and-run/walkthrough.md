@@ -154,7 +154,7 @@ macs2 callpeak \
 | `--outdir` | Destination for peak files |
 | `-n` | Prefix for result filenames |
 
-**Outputs:** MACS2 peak files (including narrowPeak), summits, and logs. The supplied command does **not** specify an explicit control BAM or a broad-peak option. More target-specific peak-calling variants can be introduced later with the bioinformatics lead's approval.
+**Outputs:** MACS2 peak files (including narrowPeak), summits, and logs. The supplied command does **not** specify an explicit control BAM or a broad-peak option. More target-specific peak-calling variants can be introduced later.
 
 ## 6B. DiffBind — compare conditions (to be completed)
 
