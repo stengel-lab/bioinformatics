@@ -17,6 +17,7 @@ theme:
     - navigation.top
     - search.suggest
     - search.highlight
+    - content.code.copy
 plugins:
   - search
 markdown_extensions:
@@ -29,6 +30,13 @@ validation:
     anchors: warn
 nav:
   - Home: index.md
-  - Pipelines: pipelines/index.md
+  - Pipelines:
+      - Overview: pipelines/index.md
+      - CUT&RUN:
+          - Overview: pipelines/cut-and-run/index.md
+          - Walkthrough: pipelines/cut-and-run/walkthrough.md
   - Tools: tools/index.md
-  - Setup: setup/index.md
+  - Setup:
+      - Overview: setup/index.md
+      - Reference resources:
+          - hg38: setup/references/hg38.md
