@@ -126,7 +126,7 @@ bamCoverage \
 
 **Output:** a `.CPM.bw` track for each sample, suitable for genome-browser inspection.
 
-**Later variant:** where spike-in calibration is used, the reference, counting method, scaling factors, and statistical normalization should be documented together. No spike-in command is established by these three source files.
+**Later variant:** where spike-in calibration is used, the reference, counting method, scaling factors, and statistical normalization should be documented together.
 
 ## 6A. MACS2 — call enriched peaks
 
