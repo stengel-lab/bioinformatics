@@ -52,6 +52,8 @@ cutadapt \
 | `--minimum-length 15` | Minimum retained **read** length of 15 nt |
 | `-o`, `-p` | Trimmed output for R1 and R2, respectively |
 
+**Adapter sequences:** The sequences above are from the lab's baseline pipeline. Different library preparation kits or sequencing protocols may require different sequences. Check your library preparation information and FastQC adapter findings, then adjust `-a` and `-A` if needed.
+
 **Outputs:** paired trimmed FASTQs. Review the Cutadapt summary for retained reads and adapter matches before aligning. This baseline does **not** add a `-q` quality-trimming option.
 
 ## 3. Bowtie2 — align to hg38
