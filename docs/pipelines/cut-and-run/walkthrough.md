@@ -163,9 +163,3 @@ macs2 callpeak \
 **Expected inputs:** BAMs, peaks, and a sample sheet specifying conditions/replicates. **Expected outputs:** differential binding results with estimated effects and statistical significance.
 
 **Not yet specified by these source scripts:** the canonical DiffBind commands, consensus peak strategy, counting options, design/contrasts, normalization factors, and export format. We will add the actual commands once the lab bioinformatics lead supplies or approves them. BigWig tracks are **not** the input to DiffBind.
-
-## Source-of-truth boundary
-
-The three supplied source scripts govern steps 1–5 and 6A. Their Slurm array sizes, resource allocations, and file-discovery loops are *execution wrappers*, not intrinsic scientific processing parameters. No uploaded script yet establishes step 6B.
-
-This draft does not reproduce private source paths, assume unknown software versions, or silently combine commands from the previous archived tutorial.
