@@ -2,7 +2,7 @@
 
 ## Before starting
 
-Have paired FASTQ files, an hg38 Bowtie2 index, and FastQC, Cutadapt, Bowtie2, SAMtools, deepTools, and MACS2 available in the appropriate environments. An [hg38 reference-resource guide](../../setup/references/hg38.md) explains what needs to be documented; the **exact FASTA/index build used by the lab remains to be verified**. Tool installation pages will be added after we agree on their format.
+Have paired FASTQ files, FastQC, Cutadapt, Bowtie2, SAMtools, deepTools, and MACS2 installed, and an hg38 Bowtie2 index available. See [download hg38 and build its Bowtie2 index](../../setup/references/hg38.md) for step-by-step instructions. Tool installation pages will be added separately.
 
 The examples assume a Bash shell and these variables, set once **for each sample**:
 
