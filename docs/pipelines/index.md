@@ -1,5 +1,9 @@
 # Pipelines
 
-This section will contain assay-specific processing guides. Each workflow will have a short overview and one continuous, step-by-step walkthrough, with additional pages only when needed.
+Practical processing guides, with one short overview and one continuous command walkthrough per assay.
 
-Walkthroughs will link to shared [tool references](../tools/index.md) and [setup guidance](../setup/index.md). No individual pipeline guides are available yet.
+## In development
+
+- **[CUT&RUN](cut-and-run/index.md)** — baseline FASTQ → BAM processing, CPM BigWig generation, MACS2 peak calling, and DiffBind differential binding. [Open the walkthrough](cut-and-run/walkthrough.md).
+
+The CUT&RUN pages are an initial draft based on supplied lab scripts. Other pipelines will be added only after we finalize this structure.

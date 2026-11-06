@@ -1,5 +1,9 @@
 # Setup
 
-This section will cover computing environments, operating systems, dependencies, and reference data for local computers and HPC systems.
+This section covers computing environments, dependencies, and shared reference resources needed by the lab's workflows.
 
-Shared setup instructions will support the pipeline and tool guides without repeating environment configuration throughout each walkthrough. Platform-specific guides are not available yet.
+## Reference resources
+
+- [Human hg38 reference](references/hg38.md) — required genome index, related resources, provenance requirements, and future distribution plans.
+
+Operating-system-specific installation guides will be developed alongside approved tool references.
