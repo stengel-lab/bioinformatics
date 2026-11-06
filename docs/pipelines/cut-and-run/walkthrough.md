@@ -158,10 +158,64 @@ macs2 callpeak \
 
 **Outputs:** MACS2 peak files (including narrowPeak), summits, and logs. The supplied command does **not** specify an explicit control BAM or a broad-peak option. More target-specific peak-calling variants can be introduced later.
 
-## 6B. DiffBind — compare conditions (to be completed)
+## 6B. DiffBind — differential binding
 
-**Goal:** Use individual samples' sorted BAMs, MACS2 peak files, replicate assignments, and experimental design to quantify binding changes between conditions.
+**Purpose:** Use the sample sheet, individual BAMs, and MACS2 narrowPeak files to count binding signal and compare experimental conditions.
 
-**Expected inputs:** BAMs, peaks, and a sample sheet specifying conditions/replicates. **Expected outputs:** differential binding results with estimated effects and statistical significance.
+Prepare a CSV sample sheet containing the experiment's sample IDs, conditions, replicates, and paths to the BAM and peak files. The exact columns and design must match the data being analyzed. Replace `samples.csv` with your own file.
 
-**Not yet specified by these source scripts:** the canonical DiffBind commands, consensus peak strategy, counting options, design/contrasts, normalization factors, and export format. We will add the actual commands once the lab bioinformatics lead supplies or approves them. BigWig tracks are **not** the input to DiffBind.
+```r
+library(DiffBind)
+
+samples <- read.csv("samples.csv", header=TRUE)
+names(samples)
+samples
+
+tamoxifen <- dba(sampleSheet=samples, peakFormat="narrow")
+tamoxifen <- dba.count(tamoxifen, bParallel=FALSE,
+                       bRemoveDuplicates=TRUE,
+                       bUseSummarizeOverlaps=TRUE)
+
+myDBA <- dba.count(tamoxifen, peaks=NULL, score=DBA_SCORE_READS)
+counts <- dba.peakset(myDBA, bRetrieve=TRUE,
+                      writeFile="readscores.txt")
+head(counts)
+
+normCounts <- dba.peakset(tamoxifen, bRetrieve=TRUE,
+                          DataType=DBA_DATA_FRAME)
+write.csv(normCounts, "normalized_read_counts_all_samples.csv")
+
+tamoxifen <- dba.normalize(tamoxifen)
+norm <- dba.normalize(tamoxifen, bRetrieve=TRUE)
+norm
+
+tamoxifen <- dba.contrast(tamoxifen, categories=DBA_CONDITION,
+                          minMembers=2)
+tamoxifen <- dba.analyze(tamoxifen)
+
+dba.show(tamoxifen, bContrasts=TRUE)
+plot(tamoxifen)
+
+tamoxifen.DB <- dba.report(tamoxifen, contrast=1, th=1)
+write.csv(tamoxifen.DB, "Differential_analysis_using_diffbind.csv")
+```
+
+| Command/setting | Meaning |
+| --- | --- |
+| `dba(sampleSheet=..., peakFormat="narrow")` | Load sample metadata and MACS2 narrow peaks |
+| `dba.count(...)` | Count reads across binding regions using the sample BAMs |
+| `bParallel=FALSE` | Disable parallel processing |
+| `bRemoveDuplicates=TRUE` | Request duplicate removal during DiffBind counting |
+| `bUseSummarizeOverlaps=TRUE` | Use `summarizeOverlaps` for read counting |
+| `peaks=NULL, score=DBA_SCORE_READS` | Set the binding matrix to show raw read counts without ordinarily recounting |
+| `dba.peakset(..., bRetrieve=TRUE)` | Retrieve/export the binding matrix |
+| `dba.normalize()` | Compute normalization using the installed version's defaults |
+| `dba.contrast(..., categories=DBA_CONDITION, minMembers=2)` | Define condition-based comparisons requiring at least two samples per group |
+| `dba.analyze()` | Fit the selected differential-binding model |
+| `dba.report(..., contrast=1, th=1)` | Retrieve the first contrast, without a restrictive FDR cutoff |
+
+**Outputs:** `readscores.txt`, `normalized_read_counts_all_samples.csv`, a contrast plot, and `Differential_analysis_using_diffbind.csv`.
+
+**Notes:** The supplied code exports the file labeled `normalized_read_counts_all_samples.csv` *before* the explicit normalization call. Its values should be checked before treating it as a final normalized-count matrix. The defaults for normalization, region counting, and analysis method depend on the installed DiffBind version and configuration. The input sample sheet and program version were not supplied. For experiments using spike-in normalization, the DiffBind normalization method must be selected consistently with the experimental calibration strategy; the above code does not explicitly configure spike-in factors.
+
+**Source:** Adapted from the lab bioinformatics lead's DiffBind R commands. The private input path was replaced with `samples.csv`, duplicate exploratory retrieval was consolidated, and a missing newline between the plot and report commands was restored. The scientific parameters were not intentionally changed.
