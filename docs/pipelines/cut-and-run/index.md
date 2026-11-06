@@ -10,7 +10,7 @@ CUT&RUN (Cleavage Under Targets and Release Using Nuclease) is a sequencing meth
 - **Core output:** one coordinate-sorted, indexed BAM per sample.
 - **Coverage output:** a CPM-normalized BigWig track from each BAM.
 - **Peak output:** MACS2 narrow peak calls from each BAM.
-- **Planned downstream endpoint:** DiffBind analysis using the individual BAMs, peak calls, and experimental design. The lab-authoritative DiffBind commands have **not yet been supplied**.
+- **Differential-binding output:** DiffBind reports based on the individual BAMs, MACS2 peaks, and experimental design.
 
 ## Processing map
 
@@ -33,7 +33,7 @@ Paired FASTQs (R1, R2)
     │
     └──► 6A. MACS2              — peak calls
               │
-              └──► 6B. DiffBind — differential binding (implementation pending)
+              └──► 6B. DiffBind — differential binding
                         ▲
                         └── individual BAMs + sample design
 ```
